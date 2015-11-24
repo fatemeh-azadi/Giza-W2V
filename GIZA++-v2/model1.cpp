@@ -214,7 +214,9 @@ void model1::em_loop(int it,Perplexity& perp, sentenceHandler& sHandler1, bool s
       else 
 	for((i=0),(sPtrCachePtr=&sPtrCache[0]); i <= l; i++,sPtrCachePtr++){
 	  PROB e(0.0) ;
-	  (*sPtrCachePtr) = tTable.getPtr(es[i], fs[j]) ;
+      (*sPtrCachePtr) = tTable.getPtr(es[i], fs[j]) ;
+      if(i && useWord2Vec && !isSimilar[j][i])
+          continue;
       if ((*sPtrCachePtr) != 0 && (*((*sPtrCachePtr))).prob > PROB_SMOOTH)
 	    e = (*((*sPtrCachePtr))).prob;
 	  else e = PROB_SMOOTH ;
@@ -266,7 +268,7 @@ void model1::em_loop(int it,Perplexity& perp, sentenceHandler& sHandler1, bool s
 	  // Old code:
 	  else{
 	    for((i=0),(sPtrCachePtr=&sPtrCache[0]); i <= l; i++,sPtrCachePtr++){
-          if(useWord2Vec && !isSimilar[j][i])
+          if(i && useWord2Vec && !isSimilar[j][i])
               continue;
            PROB e(0.0) ;
           if (it == 1 && !seedModel1){
